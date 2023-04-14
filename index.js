@@ -1,7 +1,6 @@
 import express from 'express';
 
 import {router as banktransfer_router} from './banktransfer_router.js';
-import { transferAmmount,checkSourceAccountExists,checkBalanceAvailability } from './banktransfer_controller.js';
 
 const app = express();
 

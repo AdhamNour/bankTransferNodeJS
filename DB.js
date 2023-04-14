@@ -50,7 +50,12 @@ export const getBalance = (accountNumber) => {
           //  .json({ error: "Error checking source account balance" });
           reject("Error checking source account balance")
           return;
-        } else {
+        }
+        if (result.rows.length === 0) {
+          // reject("Account not found");
+          resolve(null)
+        } 
+        else {
           resolve(result.rows[0].balance)
         }
       })

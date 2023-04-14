@@ -7,12 +7,25 @@ export const transferAmmount = (req, res) => {
     ).catch((err) => res.status(500).json({ message: err }))
 };
 
-export const checkSourceAccountExists = (req, res, next) => {
-    const { sourceAccount } = req.body;
+export const checkAccount = async (req, res, next) => {
+    const { sourceAccount,targetAccount } = req.body;
     if (!sourceAccount) {
         return res.status(400).json({ error: "Source account is required" });
     }
-    getBalance(sourceAccount).then((balance) => { res.locals.balance = balance; next(); })
+    if (!targetAccount) {
+        return res.status(400).json({ error: "Target account is required" });
+    }
+    // getBalance(sourceAccount).then((balance) => { res.locals.balance = balance; next(); })
+    const sourceBalance = await getBalance(sourceAccount);
+    if (!sourceBalance) {
+        return res.status(404).json({ error: "Source account does not exist" });
+    }
+    const targetBalance = await getBalance(targetAccount)
+    if (!targetBalance) {
+        return res.status(404).json({ error: "Target account does not exist" });
+    }
+    res.locals.balance = sourceBalance
+    next();
 };
 
 export const checkBalanceAvailability = (req, res, next) => {
